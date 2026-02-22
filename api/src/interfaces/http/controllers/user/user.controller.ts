@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Delete } from '@nestjs/common';
-import { GetUserUseCase } from '../../../application/usecases/users/get-user.usecase';
-import { DeleteUserUseCase } from '../../../application/usecases/users/delete-user.usecase';
+import { GetUserUseCase } from '../../../../application/usecases/users/get-user.usecase';
+import { DeleteUserUseCase } from '../../../../application/usecases/users/delete-user.usecase';
 
 @Controller('users')
 export class UserController {

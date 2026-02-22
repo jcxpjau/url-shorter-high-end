@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, Delete, Req } from '@nestjs/common';
-import { CreateShortLinkUseCase } from '../../../application/usecases/shortlink/create-shortlink.usecase';
-import { DeleteShortLinkUseCase } from '../../../application/usecases/shortlink/delete-shortlink.usecase';
-import { ListUserShortLinksUseCase } from '../../../application/usecases/shortlink/list-user.shortlink.usecase';
+import { CreateShortLinkUseCase } from '../../../../application/usecases/shortlink/create-shortlink.usecase';
+import { DeleteShortLinkUseCase } from '../../../../application/usecases/shortlink/delete-shortlink.usecase';
+import { ListUserShortLinksUseCase } from '../../../../application/usecases/shortlink/list-user.shortlink.usecase';
 
 @Controller('short-links')
 export class ShortLinkController {
