@@ -4,13 +4,15 @@ import { ShortLinkController } from './interfaces/http/controllers/shortlink/sho
 import { ShortLinkModule } from './interfaces/http/controllers/shortlink/shortlink.module';
 import { UserModule } from './interfaces/http/controllers/user/user.module';
 import { ConfigModule } from '@nestjs/config';
+import { StatsModule } from './interfaces/http/controllers/stats/stats.module';
 
 @Module({
     imports: [
         ConfigModule.forRoot({ isGlobal: true }),
         AuthModule,
         ShortLinkModule,
-        UserModule
+        UserModule,
+        StatsModule
     ]
 })
 export class AppModule { }

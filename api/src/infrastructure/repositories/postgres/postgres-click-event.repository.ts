@@ -1,7 +1,9 @@
 import { ClickEventRepository } from '../../../domain/repositories/click-event.repository';
 import { ClickEvent } from '../../../domain/entities/click-event.entity';
 import { PrismaService } from '../../database/postgres/prisma.service';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class PostgresClickEventRepository implements ClickEventRepository {
     constructor(private readonly prisma: PrismaService) { }
 

@@ -4,6 +4,8 @@ import { ShortLink } from '../../../domain/entities/short-link.entity';
 import { Inject, Injectable } from '@nestjs/common';
 import { SHORTLINK_RESPOSITORY } from 'src/application/injection-tokens/short-link.token';
 import { SHORTCODE_GENERATOR } from 'src/application/injection-tokens/shortcode-generator.token';
+import type { CacheRepository } from 'src/domain/repositories/cache.repository';
+import { CACHE_REPOSITORY } from 'src/application/injection-tokens/cache-repository.token';
 
 interface CreateShortLinkInput {
     userId: number;
@@ -17,6 +19,8 @@ export class CreateShortLinkUseCase {
         private readonly shortLinkRepository: ShortLinkRepository,
         @Inject( SHORTCODE_GENERATOR )
         private readonly shortCodeGenerator: ShortCodeGenerator,
+        @Inject(CACHE_REPOSITORY)
+        private readonly cacheRepository: CacheRepository
     ) { }
 
     async execute(input: CreateShortLinkInput): Promise<ShortLink> {
@@ -33,7 +37,7 @@ export class CreateShortLinkUseCase {
         });
 
         await this.shortLinkRepository.save(shortLink);
-
+        await this.cacheRepository.set(`shortlink:${shortCode}`, shortLink.originalUrl, 60 * 60 * 24);
         return shortLink;
     }
 }
