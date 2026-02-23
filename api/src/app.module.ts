@@ -5,6 +5,7 @@ import { ShortLinkModule } from './interfaces/http/controllers/shortlink/shortli
 import { UserModule } from './interfaces/http/controllers/user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { StatsModule } from './interfaces/http/controllers/stats/stats.module';
+import { RedirectModule } from './interfaces/http/controllers/redirect/redirect.module';
 
 @Module({
     imports: [
@@ -12,7 +13,8 @@ import { StatsModule } from './interfaces/http/controllers/stats/stats.module';
         AuthModule,
         ShortLinkModule,
         UserModule,
-        StatsModule
+        StatsModule,
+        RedirectModule
     ]
 })
 export class AppModule { }
