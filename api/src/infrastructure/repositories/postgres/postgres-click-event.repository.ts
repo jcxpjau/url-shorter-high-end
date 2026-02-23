@@ -5,14 +5,14 @@ import { PrismaService } from '../../database/postgres/prisma.service';
 export class PostgresClickEventRepository implements ClickEventRepository {
     constructor(private readonly prisma: PrismaService) { }
 
-    async countByShortLinkId(shortLinkId: string): Promise<number> {
+    async countByShortLinkId(shortLinkId: number): Promise<number> {
         return this.prisma.clickEventModel.count({
             where: { shortLinkId },
         });
     }
 
     async findByShortLinkId(
-        shortLinkId: string,
+        shortLinkId: number,
         page: number,
         limit: number,
     ): Promise<ClickEvent[]> {

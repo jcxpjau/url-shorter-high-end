@@ -1,7 +1,10 @@
 import { Body, Controller, Post, HttpCode } from '@nestjs/common';
-import { LoginUseCase } from '../../../../application/usecases/auth/login.usecase';
-import { RegisterUserUseCase } from '../../../../application/usecases/auth/register-user.usecase';
+import { ApiTags, ApiBody, ApiResponse } from '@nestjs/swagger';
+import { LoginDto, RegisterDto } from './auth.dto';
+import { LoginUseCase } from 'src/application/usecases/auth/login.usecase';
+import { RegisterUserUseCase } from 'src/application/usecases/auth/register-user.usecase';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
     constructor(
@@ -11,12 +14,16 @@ export class AuthController {
 
     @Post('login')
     @HttpCode(200)
-    async login(@Body() body: { email: string; password: string }) {
+    @ApiBody({ type: LoginDto })
+    @ApiResponse({ status: 200, description: 'User logged in' })
+    async login(@Body() body: LoginDto) {
         return this.loginUser.execute(body);
     }
 
     @Post('register')
-    async register(@Body() body: { email: string; password: string }) {
+    @ApiBody({ type: RegisterDto })
+    @ApiResponse({ status: 201, description: 'User registered' })
+    async register(@Body() body: RegisterDto) {
         return this.registerUser.execute(body);
     }
 }

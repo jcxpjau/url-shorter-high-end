@@ -1,6 +1,6 @@
 export interface CreateShortLinkOutput {
-    id: string;
-    userId: string;
+    id?: number;
+    userId: number;
     originalUrl: string;
     shortCode: string;
     createdAt: Date;

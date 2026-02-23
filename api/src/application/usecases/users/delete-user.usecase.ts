@@ -1,11 +1,15 @@
-import { UserRepository } from '../../../domain/repositories/user.repository';
+import { Inject, Injectable } from '@nestjs/common';
+import type { UserRepository } from '../../../domain/repositories/user.repository';
+import { USER_REPOSITORY } from 'src/application/injection-tokens/user-repository.token';
 
 interface DeleteUserInput {
-    id: string;
+    id: number;
 }
 
+@Injectable()
 export class DeleteUserUseCase {
     constructor(
+        @Inject( USER_REPOSITORY )
         private readonly userRepository: UserRepository,
     ) { }
 

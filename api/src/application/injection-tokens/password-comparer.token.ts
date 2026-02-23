@@ -1,0 +1,1 @@
+export const PASSWORD_HASH = Symbol('PASSWORD_HASH');

@@ -1,0 +1,1 @@
+export const SHORTCODE_GENERATOR = Symbol('SHORTCODE_GENERATOR');

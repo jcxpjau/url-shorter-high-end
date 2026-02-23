@@ -1,7 +1,9 @@
 import { UserRepository } from '../../../domain/repositories/user.repository';
 import { User } from '../../../domain/entities/user.entity';
 import { PrismaService } from '../../database/postgres/prisma.service';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class PostgresUserRepository implements UserRepository {
     constructor(private readonly prisma: PrismaService) { }
 
@@ -10,20 +12,22 @@ export class PostgresUserRepository implements UserRepository {
         return row
             ? new User({
                 id: row.id,
+                name: row.name,
                 email: row.email,
-                passwordHash: row.passwordHash,
+                password: row.password,
                 createdAt: row.createdAt,
             })
             : null;
     }
 
-    async findById(id: string): Promise<User | null> {
+    async findById(id: number): Promise<User | null> {
         const row = await this.prisma.userModel.findUnique({ where: { id } });
         return row
             ? new User({
                 id: row.id,
+                name: row.name,
                 email: row.email,
-                passwordHash: row.passwordHash,
+                password: row.password,
                 createdAt: row.createdAt,
             })
             : null;
@@ -33,14 +37,15 @@ export class PostgresUserRepository implements UserRepository {
         await this.prisma.userModel.create({
             data: {
                 id: user.id,
+                name: user.name,
                 email: user.email,
-                passwordHash: user.passwordHash,
+                password: user.passwordHash,
                 createdAt: user.createdAt,
             },
         });
     }
 
-    async delete(id: string): Promise<void> {
+    async delete(id: number): Promise<void> {
         await this.prisma.userModel.delete({
             where: { id },
         });

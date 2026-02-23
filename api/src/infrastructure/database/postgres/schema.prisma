@@ -7,9 +7,10 @@ datasource db {
 }
 
 model UserModel {
-  id           String   @id @default(uuid())
+  id           Int      @id @default(autoincrement())
+  name         String   @db.VarChar(255)
   email        String   @db.VarChar(255)
-  passwordHash String   @db.VarChar(255)
+  password     String   @db.VarChar(255)
   createdAt    DateTime @default(now())
 
   shortLinks   ShortLinkModel[]
@@ -20,8 +21,8 @@ model UserModel {
 }
 
 model ShortLinkModel {
-  id          String   @id @default(uuid())
-  userId      String
+  id          Int      @id @default(autoincrement())
+  userId      Int
   originalUrl String   @db.Text
   shortCode   String   @db.VarChar(16)
   createdAt   DateTime @default(now())
@@ -38,8 +39,8 @@ model ShortLinkModel {
 }
 
 model ClickEventModel {
-  id          String   @id @default(uuid())
-  shortLinkId String
+  id          Int      @id @default(autoincrement())
+  shortLinkId Int
   ip          String   @db.VarChar(45)   // IPv4 + IPv6
   userAgent   String   @db.Text
   createdAt   DateTime @default(now())

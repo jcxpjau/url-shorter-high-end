@@ -6,6 +6,8 @@ import {
     HttpStatus,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { DomainError } from 'src/shared/errors/domain.error';
+import { logger } from 'src/shared/logger/pino.logger.service';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -17,6 +19,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
         let status = HttpStatus.INTERNAL_SERVER_ERROR;
         let message = 'Internal server error';
 
+        console.error('🔥 EXCEPTION:', exception);
+
         if (exception instanceof HttpException) {
             status = exception.getStatus();
             const res = exception.getResponse();
@@ -24,6 +28,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
                 typeof res === 'string'
                     ? res
                     : (res as any).message || exception.message;
+        }
+
+        if (exception instanceof DomainError) {
+            status = HttpStatus.BAD_REQUEST;
+            message = exception.message;
         }
 
         response.status(status).json({

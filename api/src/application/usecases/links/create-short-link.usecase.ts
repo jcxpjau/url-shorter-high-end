@@ -32,12 +32,9 @@ export class CreateShortLinkUseCase {
             userId: input.userId,
             originalUrl: input.originalUrl,
             shortCode,
-          });
-
-        await this.shortLinkRepository.save(link);
-
-        await this.cacheRepository.set(`short:${shortCode}`, link.originalUrl);
-
-        return { ...link };
+        });
+        const savedLink = await this.shortLinkRepository.save(link);
+        await this.cacheRepository.set(`short:${shortCode}`, savedLink.originalUrl);
+        return savedLink;
     }
 }

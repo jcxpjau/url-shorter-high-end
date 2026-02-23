@@ -1,13 +1,13 @@
 export class ClickEvent {
-    public readonly id: string;
-    public readonly shortLinkId: string;
+    public readonly id?: number;
+    public readonly shortLinkId: number;
     public readonly ip: string;
     public readonly userAgent: string;
     public readonly createdAt: Date;
 
     constructor(params: {
-        id: string;
-        shortLinkId: string;
+        id?: number;
+        shortLinkId: number;
         ip: string;
         userAgent: string;
         createdAt: Date;

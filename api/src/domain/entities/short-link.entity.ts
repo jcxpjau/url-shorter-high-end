@@ -1,16 +1,16 @@
 import { randomUUID } from 'crypto';
 
 export class ShortLink {
-    public readonly id: string;
-    public readonly userId: string;
+    public readonly id?: number;
+    public readonly userId: number;
     public readonly originalUrl: string;
     public readonly shortCode: string;
     public readonly createdAt: Date;
     public readonly isActive: boolean;
 
     private constructor(params: {
-        id: string;
-        userId: string;
+        id?: number;
+        userId: number;
         originalUrl: string;
         shortCode: string;
         createdAt: Date;
@@ -25,12 +25,11 @@ export class ShortLink {
     }
 
     static create(params: {
-        userId: string;
+        userId: number;
         originalUrl: string;
         shortCode: string;
     }): ShortLink {
         return new ShortLink({
-            id: randomUUID(),
             userId: params.userId,
             originalUrl: params.originalUrl,
             shortCode: params.shortCode,
@@ -40,8 +39,8 @@ export class ShortLink {
     }
 
     static restore(params: {
-        id: string;
-        userId: string;
+        id: number;
+        userId: number;
         originalUrl: string;
         shortCode: string;
         createdAt: Date;

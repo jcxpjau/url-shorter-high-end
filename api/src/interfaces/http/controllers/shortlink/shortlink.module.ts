@@ -1,24 +1,31 @@
 import { Module } from '@nestjs/common';
-import { LoginUseCase } from '../../../../application/usecases/auth/login.usecase';
-import { RegisterUserUseCase } from '../../../../application/usecases/auth/register-user.usecase';
-import { PostgresUserRepository } from '../../../../infrastructure/repositories/postgres/postgres-user.repository';
-import { PrismaService } from '../../../../infrastructure/database/postgres/prisma.service';
-import { PostgresShortLinkRepository } from 'src/infrastructure/repositories/postgres/postgres-short-link.repository';
+import { SHORTLINK_RESPOSITORY } from 'src/application/injection-tokens/short-link.token';
+import { SHORTCODE_GENERATOR } from 'src/application/injection-tokens/shortcode-generator.token';
+import { ShortCodeGenerator } from 'src/application/service/shortcode-generator.service';
 import { CreateShortLinkUseCase } from 'src/application/usecases/shortlink/create-shortlink.usecase';
 import { DeleteShortLinkUseCase } from 'src/application/usecases/shortlink/delete-shortlink.usecase';
 import { ListUserShortLinksUseCase } from 'src/application/usecases/shortlink/list-user.shortlink.usecase';
-import { RedirectShortLinkUseCase } from 'src/application/usecases/links/redirect-short-link.usecase';
+import { PostgresShortLinkRepository } from 'src/infrastructure/repositories/postgres/postgres-short-link.repository';
+import { PrismaService } from '../../../../infrastructure/database/postgres/prisma.service';
 import { ShortLinkController } from './shortlink.controller';
+import { EditShortLinkUseCase } from 'src/application/usecases/shortlink/edit-shortlink.usecase';
 
 @Module({
   controllers: [ShortLinkController],
   providers: [
     PrismaService,
-    PostgresShortLinkRepository,
     CreateShortLinkUseCase,
+    EditShortLinkUseCase,
     DeleteShortLinkUseCase,
     ListUserShortLinksUseCase,
-    RedirectShortLinkUseCase
+    {
+      provide: SHORTLINK_RESPOSITORY,
+      useClass: PostgresShortLinkRepository,
+    },
+    {
+      provide: SHORTCODE_GENERATOR,
+      useClass: ShortCodeGenerator,
+  }
   ],
 })
-export class ShortLinkModule {}
+export class ShortLinkModule { }

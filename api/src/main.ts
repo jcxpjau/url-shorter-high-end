@@ -12,7 +12,7 @@ async function bootstrap() {
 
   app.useLogger(logger);
   app.use(requestIdMiddleware);
-  app.useGlobalFilters(new HttpExceptionFilter());
+  //app.useGlobalFilters(new HttpExceptionFilter());
 
   const config = new DocumentBuilder()
     .setTitle('URL Shortener API')

@@ -1,8 +1,8 @@
 export interface GetLinkStatsOutput {
     totalClicks: number;
     events: {
-      id: string;
-      shortLinkId: string;
+      id: number;
+      shortLinkId: number;
       ip: string;
       userAgent: string;
       createdAt: Date;

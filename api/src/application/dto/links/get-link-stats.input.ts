@@ -1,6 +1,6 @@
 export interface GetLinkStatsInput {
-    shortLinkId: string;
-    userId: string;
+    shortLinkId: number;
+    userId: number;
     page: number;
     limit: number;
   }

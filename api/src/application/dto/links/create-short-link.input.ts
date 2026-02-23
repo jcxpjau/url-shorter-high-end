@@ -1,4 +1,4 @@
 export interface CreateShortLinkInput {
-    userId: string;
+    userId: number;
     originalUrl: string;
   }

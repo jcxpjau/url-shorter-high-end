@@ -19,11 +19,19 @@ export class GetLinkStatsUseCase {
             input.shortLinkId,
         );
 
-        const events = await this.clickEventRepository.findByShortLinkId(
+        const eventsEntities = await this.clickEventRepository.findByShortLinkId(
             input.shortLinkId,
             input.page,
             input.limit,
         );
+
+        const events = eventsEntities.map(event => ({
+            id: event.id!,
+            shortLinkId: event.shortLinkId,
+            ip: event.ip,
+            userAgent: event.userAgent,
+            createdAt: event.createdAt,
+        }));
 
         return { totalClicks, events };
     }

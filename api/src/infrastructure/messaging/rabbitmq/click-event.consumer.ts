@@ -27,8 +27,7 @@ export class ClickEventConsumer {
             }
 
             const event = new ClickEvent({
-                id: crypto.randomUUID(),
-                shortLinkId: link.id,
+                shortLinkId: link.id!,
                 ip: payload.ip,
                 userAgent: payload.userAgent,
                 createdAt: new Date(),
