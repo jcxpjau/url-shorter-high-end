@@ -18,7 +18,7 @@ export class EditShortLinkUseCase {
         try {
             const link = await this.shortLinkRepository.edit(id, status);
             if (status) {
-                await this.cacheRepository.set(`shortlink:${link.shortCode}`, link.originalUrl, 60 * 60 * 24);
+                await this.cacheRepository.set(`shortlink:${link.shortCode}`, JSON.stringify({ id: link.id, url: link.originalUrl }), 60 * 60 * 24);
             } else {
                 await this.cacheRepository.del(`shortlink:${link.shortCode}`);
             }

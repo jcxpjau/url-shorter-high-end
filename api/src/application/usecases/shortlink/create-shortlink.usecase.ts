@@ -36,8 +36,8 @@ export class CreateShortLinkUseCase {
             shortCode,
         });
 
-        await this.shortLinkRepository.save(shortLink);
-        await this.cacheRepository.set(`shortlink:${shortCode}`, shortLink.originalUrl, 60 * 60 * 24);
+        const savedShortLink = await this.shortLinkRepository.save(shortLink);
+        await this.cacheRepository.set(`shortlink:${shortCode}`, JSON.stringify({ id: savedShortLink.id, url: savedShortLink.originalUrl }), 60 * 60 * 24);
         return shortLink;
     }
 }

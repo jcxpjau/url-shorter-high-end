@@ -11,6 +11,9 @@ import { PrismaService } from '../../../../infrastructure/database/postgres/pris
 import { RedirectController } from './redirect.controller';
 import { CLICKEVENTS_REPOSITORY } from 'src/application/injection-tokens/click-events.token';
 import { PostgresClickEventRepository } from 'src/infrastructure/repositories/postgres/postgres-click-event.repository';
+import { CLICK_EVENT_QUEUE_REPOSITORY } from 'src/application/injection-tokens/click-event-queue.token';
+import { ClickEventProducer } from 'src/infrastructure/messaging/rabbitmq/click-event.producer';
+import { RabbitMQChannelProvider } from 'src/infrastructure/messaging/rabbitmq/rabbitmq.provider';
 
 @Module({
     controllers: [RedirectController],
@@ -18,6 +21,7 @@ import { PostgresClickEventRepository } from 'src/infrastructure/repositories/po
         PrismaService,
         RedisModule,
         RedirectUseCase,
+        RabbitMQChannelProvider,
         {
             provide: SHORTLINK_RESPOSITORY,
             useClass: PostgresShortLinkRepository,
@@ -29,6 +33,10 @@ import { PostgresClickEventRepository } from 'src/infrastructure/repositories/po
         {
             provide: CACHE_REPOSITORY,
             useClass: RedisService,
+        },
+        {
+            provide: CLICK_EVENT_QUEUE_REPOSITORY,
+            useClass: ClickEventProducer,
         }
     ],
 })

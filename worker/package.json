@@ -1,0 +1,28 @@
+{
+    "name": "click-event-worker",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "tsx src/main.ts",
+        "build": "tsc",
+        "start": "node dist/main.js"
+    },
+    "dependencies": {
+        "@prisma/adapter-pg": "^7.4.1",
+        "@prisma/client": "^7.4.1",
+        "amqplib": "^0.10.9",
+        "dotenv": "^16.6.1",
+        "pg": "^8.18.0"
+    },
+    "devDependencies": {
+        "@types/amqplib": "^0.10.8",
+        "@types/pg": "^8.16.0",
+        "prisma": "^7.4.1",
+        "tsx": "^4.21.0",
+        "typescript": "^5.9.3"
+    },
+    "prisma": {
+        "schema": "prisma/schema.prisma"
+    }
+}
