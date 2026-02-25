@@ -111,7 +111,7 @@ http://localhost:3000/swagger
 * **Dockerizado**: Ambiente reproduzível, isolado, pronto para CI/CD.
 * **Tipagem forte com TypeScript**: Evita bugs comuns e facilita manutenção.
 * **Migration-first com Prisma**: Controle de versão do banco de dados.
-* **Extensível**: Fácil adicionar autenticação JWT, rate-limiting ou analytics avançado.
+* **Extensível**: Fácil adicionar rate-limiting ou analytics avançado.
 
 ---
 
