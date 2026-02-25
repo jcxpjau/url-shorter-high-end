@@ -10,23 +10,23 @@ const pinoLogger = pino({
 });
 
 export class PinoLoggerService implements LoggerService {
-    log(message: string, ...optionalParams: any[]) {
+    log(message: any, ...optionalParams: any[]) {
         pinoLogger.info(message, ...optionalParams);
     }
 
-    error(message: string, ...optionalParams: any[]) {
+    error(message: any, ...optionalParams: any[]) {
         pinoLogger.error(message, ...optionalParams);
     }
 
-    warn(message: string, ...optionalParams: any[]) {
+    warn(message: any, ...optionalParams: any[]) {
         pinoLogger.warn(message, ...optionalParams);
     }
 
-    debug?(message: string, ...optionalParams: any[]) {
+    debug?(message: any, ...optionalParams: any[]) {
         pinoLogger.debug(message, ...optionalParams);
     }
 
-    verbose?(message: string, ...optionalParams: any[]) {
+    verbose?(message: any, ...optionalParams: any[]) {
         pinoLogger.info(message, ...optionalParams);
     }
 }

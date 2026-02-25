@@ -32,7 +32,7 @@ model ShortLinkModel {
   clickEvents ClickEventModel[]
 
   @@unique([shortCode])
-  @@index([shortCode])
+  @@index([userId, isActive])
   @@index([userId])
   @@index([isActive])
   @@map("short_links")

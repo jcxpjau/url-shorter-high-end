@@ -11,7 +11,7 @@ export class ClickEventProducer implements ClickEventQueueRepository {
         @Inject(RABBITMQ_CHANNEL) private readonly channel: Channel,
     ) {}
 
-    private readonly queue = 'click-events';
+    private readonly queue = process.env.RABBIT_QUEUE || 'click-events';
 
     async publish(event: ClickEvent): Promise<void> {
         const message = Buffer.from(JSON.stringify(event));

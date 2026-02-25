@@ -5,6 +5,7 @@ import { SHORTLINK_RESPOSITORY } from 'src/application/injection-tokens/short-li
 import type { CacheRepository } from 'src/domain/repositories/cache.repository';
 import type { ClickEventQueueRepository } from 'src/domain/repositories/click-event-queue.repository';
 import type { ShortLinkRepository } from '../../../domain/repositories/short-link.repository';
+import { logger } from 'src/shared/logger/pino.logger.service';
 
 @Injectable()
 export class RedirectUseCase {
@@ -17,43 +18,39 @@ export class RedirectUseCase {
         private readonly clickEventQueueRepository: ClickEventQueueRepository
     ) { }
 
-    async execute(shortCode: string): Promise<string | null> {
+    async execute(shortCode: string, agent: string, ip: string): Promise<string | null> {
         const cacheKey = `shortlink:${shortCode}`;
         const cachedData = await this.cacheRepository.get(cacheKey);
         let originalUrl: string | null = null;
         let shortLinkId: number | undefined;
-    
-        if (!cachedData) {
+
+        if (cachedData) {
+            const parsed = JSON.parse(cachedData);
+            originalUrl = parsed.url;
+            shortLinkId = parsed.id;
+        } else {
             const shortLink = await this.shortLinkRepository.findByShortCode(shortCode);
-            if (!shortLink) return null;
-    
+            
+            if (!shortLink || shortLink.isActive === false) {
+                return null;
+            }
+
             originalUrl = shortLink.originalUrl;
             shortLinkId = shortLink.id;
+
             const dataToCache = JSON.stringify({ id: shortLinkId, url: originalUrl });
-            
-            this.cacheRepository.set(cacheKey, dataToCache, 60 * 60 * 24).catch(err => console.error('Erro ao atualizar cache', err));
-                
-        } else {
-            try {
-                const parsed = JSON.parse(cachedData);
-                originalUrl = parsed.url;
-                shortLinkId = parsed.id;
-            } catch (err) {
-                const shortLink = await this.shortLinkRepository.findByShortCode(shortCode);
-                if (!shortLink) return null;
-                originalUrl = shortLink.originalUrl;
-                shortLinkId = shortLink.id;
-                this.cacheRepository.set(cacheKey, JSON.stringify({ id: shortLinkId, url: originalUrl }), 60 * 60 * 24).catch(e => console.error(e));
-            }
+            this.cacheRepository.set(cacheKey, dataToCache, 60 * 60 * 24)
+                .catch(err => logger.error({ err }, 'Erro ao atualizar cache no Redirect'));
         }
         if (shortLinkId) {
             this.clickEventQueueRepository.publish({
-                shortLinkId: shortLinkId,
-                ip: '127.0.0.1',
-                userAgent: 'Mozilla/5.0',
+                shortLinkId,
+                ip,
+                userAgent: agent,
                 createdAt: new Date(),
-            });
+            }).catch(err => logger.error({ err }, 'Erro ao publicar na fila de cliques'));
         }
+
         return originalUrl;
     }
 }

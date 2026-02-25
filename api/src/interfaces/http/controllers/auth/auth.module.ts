@@ -9,8 +9,16 @@ import { AuthController } from './auth.controller';
 import { PasswordHasher } from 'src/application/security/password-hasher';
 import { JwtSignerService } from 'src/application/security/jwt-signer.service';
 import { JWT_SIGN } from 'src/application/injection-tokens/jwt-sign.token';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
+    imports: [
+        JwtModule.register({
+            global: true,
+            secret: process.env.JWT_SECRET || "secret.local",
+            signOptions: { expiresIn: '1d' },
+        })
+    ],
     controllers: [AuthController],
     providers: [
         PrismaService,

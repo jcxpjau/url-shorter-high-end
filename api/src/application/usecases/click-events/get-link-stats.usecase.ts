@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import type { ClickEventRepository } from '../../../domain/repositories/click-event.repository';
 import type { ShortLinkRepository } from '../../../domain/repositories/short-link.repository';
 import { GetLinkStatsInput } from '../../dto/links/get-link-stats.input';
@@ -15,21 +15,17 @@ export class GetLinkStatsUseCase {
         private readonly clickEventRepository: ClickEventRepository,
     ) { }
 
-    async execute(id: number, page: number, limit: number): Promise<GetLinkStatsOutput> {
+    async execute(id: number, page: number, limit: number, userId: number): Promise<GetLinkStatsOutput> {
         const link = await this.shortLinkRepository.findById(id);
-        /*
-        if (!link || link.userId !== input.userId) {
-            throw new Error('Link not found');
-        }*/
-
+        if (!link || link.userId !== userId) {
+            throw new UnauthorizedException('Unauthorized');
+        }
         const totalClicks = await this.clickEventRepository.countByShortLinkId(id);
-
         const eventsEntities = await this.clickEventRepository.findByShortLinkId(
             id,
             page,
             limit,
         );
-
         const events = eventsEntities.map(event => ({
             id: event.id!,
             shortLinkId: event.shortLinkId,
@@ -37,7 +33,6 @@ export class GetLinkStatsUseCase {
             userAgent: event.userAgent,
             createdAt: event.createdAt,
         }));
-
         return { totalClicks, events };
     }
 }

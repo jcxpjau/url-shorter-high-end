@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { SHORTLINK_RESPOSITORY } from 'src/application/injection-tokens/short-link.token';
 import { ShortLink } from '../../../domain/entities/short-link.entity';
 import type { ShortLinkRepository } from '../../../domain/repositories/short-link.repository';
@@ -14,17 +14,26 @@ export class EditShortLinkUseCase {
         private readonly cacheRepository: CacheRepository
     ) { }
 
-    async execute(id: number, status: boolean): Promise<ShortLink> {
-        try {
-            const link = await this.shortLinkRepository.edit(id, status);
-            if (status) {
-                await this.cacheRepository.set(`shortlink:${link.shortCode}`, JSON.stringify({ id: link.id, url: link.originalUrl }), 60 * 60 * 24);
-            } else {
-                await this.cacheRepository.del(`shortlink:${link.shortCode}`);
-            }
-            return link;
-        } catch (error) {
-            throw new NotFoundException('Short link not found');
+    async execute(id: number, userId: number, status: boolean): Promise<ShortLink> {
+        const link = await this.shortLinkRepository.findById(id);
+
+        if (!link) throw new NotFoundException('Short link not found');
+        if (link.userId !== userId) throw new UnauthorizedException('Permission denied');
+
+        await this.cacheRepository.del(`shortlink:${link.shortCode}`);
+        const updatedLink = await this.shortLinkRepository.edit(id, status);
+
+        const cacheKey = `shortlink:${updatedLink.shortCode}`;
+    
+        if (status === true) {
+            await this.cacheRepository.set(
+                cacheKey, 
+                JSON.stringify({ id: updatedLink.id, url: updatedLink.originalUrl }), 
+                60 * 60 * 24
+            );
+        } else {
+            await this.cacheRepository.del(cacheKey);
         }
+        return updatedLink;
     }
 }

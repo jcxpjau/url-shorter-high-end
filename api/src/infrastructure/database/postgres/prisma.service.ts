@@ -7,12 +7,18 @@ import { PrismaPg } from '@prisma/adapter-pg';
 export class PrismaService extends PrismaClient
     implements OnModuleInit, OnModuleDestroy {
 
+    private pool: Pool;
+
     constructor() {
-        const pool = new Pool({
-            connectionString: process.env.DATABASE_URL,
+        const poolInstance = new Pool({
+            connectionString: process.env.DATABASE_URL || "...",
+            max: 20,
+            idleTimeoutMillis: 30000,
+            connectionTimeoutMillis: 2000,
         });
-        const adapter = new PrismaPg(pool);
+        const adapter = new PrismaPg(poolInstance);
         super({ adapter });
+        this.pool = poolInstance;
     }
 
     async onModuleInit() {
@@ -21,5 +27,6 @@ export class PrismaService extends PrismaClient
 
     async onModuleDestroy() {
         await this.$disconnect();
+        await this.pool.end();
     }
 }

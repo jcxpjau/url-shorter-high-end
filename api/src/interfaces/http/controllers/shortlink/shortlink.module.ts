@@ -15,10 +15,10 @@ import { RedisService } from 'src/infrastructure/database/redis/redis.service';
 import { RedisModule } from 'src/infrastructure/database/redis/redis.module';
 
 @Module({
+    imports: [RedisModule],
     controllers: [ShortLinkController],
     providers: [
         PrismaService,
-        RedisModule,
         CreateShortLinkUseCase,
         EditShortLinkUseCase,
         DeleteShortLinkUseCase,
@@ -33,7 +33,7 @@ import { RedisModule } from 'src/infrastructure/database/redis/redis.module';
         },
         {
             provide: CACHE_REPOSITORY,
-            useClass: RedisService,
+            useExisting: RedisService,
         }
     ],
 })

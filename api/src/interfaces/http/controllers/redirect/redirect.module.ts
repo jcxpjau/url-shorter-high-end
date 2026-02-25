@@ -16,10 +16,10 @@ import { ClickEventProducer } from 'src/infrastructure/messaging/rabbitmq/click-
 import { RabbitMQChannelProvider } from 'src/infrastructure/messaging/rabbitmq/rabbitmq.provider';
 
 @Module({
+    imports: [RedisModule],
     controllers: [RedirectController],
     providers: [
         PrismaService,
-        RedisModule,
         RedirectUseCase,
         RabbitMQChannelProvider,
         {
@@ -32,7 +32,7 @@ import { RabbitMQChannelProvider } from 'src/infrastructure/messaging/rabbitmq/r
         },
         {
             provide: CACHE_REPOSITORY,
-            useClass: RedisService,
+            useExisting: RedisService,
         },
         {
             provide: CLICK_EVENT_QUEUE_REPOSITORY,

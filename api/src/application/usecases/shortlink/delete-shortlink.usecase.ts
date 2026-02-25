@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CACHE_REPOSITORY } from 'src/application/injection-tokens/cache-repository.token';
 import { SHORTLINK_RESPOSITORY } from 'src/application/injection-tokens/short-link.token';
 import type { CacheRepository } from 'src/domain/repositories/cache.repository';
@@ -26,7 +26,7 @@ export class DeleteShortLinkUseCase {
         }
 
         if (link.userId !== input.userId) {
-            //throw new UnauthorizedException('Unauthorized');
+            throw new UnauthorizedException('Unauthorized');
         }
 
         await this.cacheRepository.del(`shortlink:${link.shortCode}`);

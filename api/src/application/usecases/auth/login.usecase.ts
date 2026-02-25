@@ -31,7 +31,10 @@ export class LoginUseCase {
         if (!valid) {
             throw new UnauthorizedException( "Invalid Credentials" )
         }
-        const token = await this.jwtSigner.sign({ sub: user.email });
+        const token = await this.jwtSigner.sign({ 
+            sub: user.id!,
+            email: user.email 
+        });
         return { accessToken: token };
     }
 }

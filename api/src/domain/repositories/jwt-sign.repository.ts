@@ -1,4 +1,3 @@
 export interface JwtSigner {
-    sign(payload: { sub: string }): Promise<string>;
-    
+    sign(payload: { sub: number, email: string }): Promise<string>;
 }
